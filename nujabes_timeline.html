@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nujabes 生平音乐时间线</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 使用Inter字体 */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* 暖色背景 */
+            background-color: #f8f4ed; /* 浅米黄色背景 */
+            color: #5c5040; /* 暖深棕色文本 */
+            line-height: 1.6;
+        }
+        /* 自定义滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e9e0d4; /* 暖色滚动条轨道 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a37a4c; /* 暖色滚动条滑块 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5e3c; /* 暖色滚动条滑块悬停 */
+        }
+
+        /* 时间线核心样式 */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 0 auto;
+            max-width: 960px; /* 限制时间线宽度 */
+        }
+
+        /* 时间线中轴线 */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background-color: #d4c9b9; /* 暖色中轴线 */
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+
+        /* 时间线项目容器 */
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 左侧项目 */
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse; /* 奇数项在右侧 */
+        }
+
+        /* 项目内容 */
+        .timeline-content {
+            background-color: white; /* 内容背景保持白色或浅色 */
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: calc(50% - 40px); /* 减去圆点和间距 */
+            position: relative;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 1px solid #e2e8f0; /* 轻微边框 */
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* 左侧内容定位 */
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: 40px; /* 距离中轴线 */
+            text-align: right;
+        }
+
+        /* 右侧内容定位 */
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 40px; /* 距离中轴线 */
+            text-align: left;
+        }
+
+        /* 时间线圆点 */
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background-color: #8b5e3c; /* 暖棕色圆点 */
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            border: 3px solid #f0e9df; /* 浅暖色边框 */
+        }
+
+        /* 内容箭头 */
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            top: 20px; /* 箭头位置 */
+        }
+
+        /* 左侧内容箭头 */
+        .timeline-item:nth-child(even) .timeline-content::after {
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white; /* 箭头颜色与内容背景一致 */
+            right: -10px; /* 指向中轴线 */
+        }
+
+        /* 右侧内容箭头 */
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent; /* 箭头颜色与内容背景一致 */
+            left: -10px; /* 指向中轴线 */
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px; /* 手机上中轴线靠左 */
+            }
+            .timeline-item {
+                flex-direction: column !important; /* 手机上所有项目堆叠 */
+                align-items: flex-start;
+                padding-left: 40px; /* 为中轴线留出空间 */
+            }
+            .timeline-content {
+                width: 100%;
+                margin: 0 !important; /* 清除左右边距 */
+                text-align: left !important; /* 文本左对齐 */
+            }
+            .timeline-dot {
+                left: 20px; /* 手机上圆点靠左 */
+                transform: translate(-50%, -50%);
+            }
+            .timeline-content::after {
+                border-width: 10px 10px 0 10px; /* 箭头朝上 */
+                border-color: transparent transparent white transparent; /* 箭头颜色与内容背景一致 */
+                top: -10px; /* 箭头位置 */
+                left: 30px; /* 箭头位置 */
+                right: auto;
+            }
+            .timeline-item:nth-child(even) .timeline-content::after,
+            .timeline-item:nth-child(odd) .timeline-content::after {
+                left: 30px; /* 统一箭头位置 */
+                right: auto;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10">
+    <div class="max-w-5xl w-full px-4">
+        <h1 class="text-5xl font-extrabold text-center text-amber-800 mb-12">
+            Nujabes：生平与音乐旅程时间线
+        </h1>
+
+        <p class="text-xl text-center mb-16 leading-relaxed text-stone-700">
+            Nujabes (濑场淳) 是一位日本的音乐制作人、DJ，以其独特的爵士嘻哈风格和对音乐的深刻理解，在全球范围内留下了不朽的印记。他的音乐融合了爵士乐的复杂和声与嘻哈的舒缓节奏，营造出平静、治愈且充满希望的氛围。
+        </p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-amber-700 mb-3">
+                        1974年：诞生
+                    </h3>
+                    <p class="text-stone-700">
+                        Nujabes，原名濑场淳（せば じゅん），于1974年出生在日本东京都。他从小就对音乐表现出浓厚的兴趣。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-orange-700 mb-3">
+                        1990年代后期：职业生涯起步
+                    </h3>
+                    <p class="text-stone-700">
+                        Nujabes开始了他的DJ和音乐制作生涯。他在涩谷开设了名为“Guinness Records”的唱片店，并在此期间积累了大量的音乐知识和资源。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-amber-700 mb-3">
+                        1999年：成立 Hydeout Productions
+                    </h3>
+                    <p class="text-stone-700">
+                        Nujabes创立了自己的独立唱片公司 Hydeout Productions，旨在发行他自己和志同道合的艺术家的作品，推广他独特的爵士嘻哈声音。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-orange-700 mb-3">
+                        2003年：首张专辑《Metaphorical Music》
+                    </h3>
+                    <p class="text-stone-700">
+                        发行了他的首张个人专辑《Metaphorical Music》，这张专辑确立了他独特的采样风格和对爵士乐的深刻理解，受到了广泛好评。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-amber-700 mb-3">
+                        2004年：《Modal Soul》与《混沌武士》
+                    </h3>
+                    <p class="text-stone-700">
+                        发行了另一张标志性专辑《Modal Soul》。同年，他为渡边信一郎导演的动画《混沌武士》(Samurai Champloo) 创作了大量配乐，包括经典的片尾曲《四季之歌》，使他的音乐影响力进一步扩大。
+                    </p>
+                    <p class="text-sm text-gray-500 mt-2">
+                        （如果能提供《四季之歌》的音频链接，可以在此处添加一个播放器）
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-orange-700 mb-3">
+                        2007年：《Hydeout Productions 2nd Collection》
+                    </h3>
+                    <p class="text-stone-700">
+                        发行了 Hydeout Productions 的第二张合辑，收录了他和其他艺术家的新作品，继续推广爵士嘻哈和Lo-Fi音乐。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-amber-700 mb-3">
+                        2010年2月26日：不幸逝世
+                    </h3>
+                    <p class="text-stone-700">
+                        Nujabes 在一场突如其来的交通事故中不幸逝世，年仅36岁。他的离去是音乐界的一大损失，但他的音乐遗产却永垂不朽。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-orange-700 mb-3">
+                        2011年：遗作《Spiritual State》
+                    </h3>
+                    <p class="text-stone-700">
+                        Nujabes的遗作专辑《Spiritual State》在他逝世后一年发行，由他的朋友和合作者完成。这张专辑充满了Nujabes标志性的宁静与希望，成为他音乐旅程的完美终章。
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="text-2xl font-bold text-amber-700 mb-3">
+                        持续影响：Luv(sic)系列完成与Lo-Fi Hip-Hop浪潮
+                    </h3>
+                    <p class="text-stone-700">
+                        Nujabes与Shing02合作的《Luv(sic)》系列在他逝世后也得以全部完成，成为爵士嘻哈的经典。他的音乐风格对Lo-Fi Hip-Hop流派产生了深远影响，启发了全球无数的音乐制作人。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center text-stone-600 text-sm mt-16">
+            <p>
+                此时间线旨在展示 Nujabes 短暂而辉煌的音乐生涯。
+            </p>
+            <p class="mt-2">
+                探索 Nujabes 的音乐，感受律动与融合的独特魅力。
+            </p>
+        </div>
+    </div>
+</body>
+</html>
